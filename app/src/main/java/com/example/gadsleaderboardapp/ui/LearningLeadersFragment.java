@@ -4,14 +4,28 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.gadsleaderboardapp.R;
+import com.example.gadsleaderboardapp.model.Hours;
+import com.example.gadsleaderboardapp.network.HoursService;
+import com.example.gadsleaderboardapp.network.RetrofitClient;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 
 public class LearningLeadersFragment extends Fragment {
+
+    Retrofit mRetrofit = new RetrofitClient().getmRetrofit();
+    HoursService mHoursService = mRetrofit.create(HoursService.class);
 
 
     private static final String ARG_PARAM1 = "param1";
@@ -46,5 +60,22 @@ public class LearningLeadersFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_learning_leaders, container, false);
+    }
+
+    public void getHours (){
+        Call<List<Hours>> call = mHoursService.getHours();
+        call.enqueue(new Callback<List<Hours>>() {
+            @Override
+            public void onResponse(Call<List<Hours>> call, Response<List<Hours>> response) {
+                if(response.isSuccessful()){
+                    List<Hours> listOfHours = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Hours>> call, Throwable t) {
+
+            }
+        });
     }
 }
